@@ -6,5 +6,9 @@
     "action": {
       "default_popup": "popups/index/index.html",
       "default_icon": "images/icon_default.png"
-    }
+    },
+    "permissions": [
+        "scripting",
+        "activeTab"
+    ]
   }

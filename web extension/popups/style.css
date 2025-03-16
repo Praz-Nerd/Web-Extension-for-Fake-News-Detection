@@ -1,0 +1,7 @@
+body{
+    height: 400px;
+    width: 400px;
+}
+#status{
+    border: 1px solid black;
+}
