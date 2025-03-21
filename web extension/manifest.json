@@ -7,8 +7,15 @@
       "default_popup": "popups/index/index.html",
       "default_icon": "images/icon_default.png"
     },
-    "permissions": [
-        "scripting",
-        "activeTab"
-    ]
+    "background": {
+    "service_worker": "service-worker.js"
+    },
+    "host_permissions": [
+      "https://*/",
+      "http://*/"
+  ],
+  "permissions": [
+      "scripting",
+      "activeTab"
+  ]
   }
