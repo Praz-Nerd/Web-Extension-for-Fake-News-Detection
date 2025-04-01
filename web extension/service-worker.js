@@ -8,7 +8,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         if (message.url){
             //do the fetch to backend
             //retreive response
-            fetch('http://127.0.0.1:5000', {
+            fetch('http://127.0.0.1:5000/text', {
                 method: 'POST',
                 body: JSON.stringify({url:message.url}),
                 headers:{

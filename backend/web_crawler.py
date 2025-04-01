@@ -6,5 +6,8 @@ class WebCrawler:
         self.soup = BeautifulSoup(htmlString, 'html.parser')
     
     def extractText(self):
-        return self.soup.get_text()
+        text = ''
+        for paragraph in self.soup.find_all('p'):
+            text = ' '.join([text, paragraph.get_text()])
+        return text.strip()
 

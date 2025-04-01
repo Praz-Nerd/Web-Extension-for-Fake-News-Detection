@@ -1,6 +1,7 @@
 from flask import Flask, request, make_response
 from flask_cors import CORS
 from web_crawler import WebCrawler
+import requests
 
 app = Flask(__name__)
 CORS(app)
@@ -13,7 +14,8 @@ def hello_world():
 @app.post('/text')
 def extractText():
     req = request.get_json(silent=True)
-    crawler = WebCrawler(req['htmlString'])
+    dom = requests.get(req['url']).text
+    crawler = WebCrawler(dom)
     return {'text':crawler.extractText()}
 
 
