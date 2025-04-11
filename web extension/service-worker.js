@@ -11,15 +11,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
             case "sendUrl": {
                 if (message.url) {
                     try {
-                        const response = await fetch('http://127.0.0.1:5000/text/url', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify({ url: message.url })
-                        });
-
-                        const resultText = await response.text();
+                        const resultText = await getResponse('http://127.0.0.1:5000/text/url', 'post', {url:message.url})
                         sendResponse(resultText);
                     } catch (error) {
                         console.error("Fetch error:", error);
@@ -32,8 +24,17 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
             }
 
             case "sendText": {
-                // Placeholder for future logic
-                sendResponse({ message: 'Not implemented yet' });
+                if (message.text) {
+                    try {
+                        const resultText = await getResponse('http://127.0.0.1:5000/text', 'post', {text:message.text})
+                        sendResponse(resultText);
+                    } catch (error) {
+                        console.error("Fetch error:", error);
+                        sendResponse({ message: 'error' });
+                    }
+                } else {
+                    sendResponse({ message: 'error' });
+                }
                 break;
             }
 
@@ -44,3 +45,20 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
     return true; // Keeps the message channel open for async sendResponse
 });
+
+async function getResponse(url, method, body) {
+    params = {
+        method: method,
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        //body: JSON.stringify({ url: message.url })
+    }
+
+    if(method.toLowerCase() === 'post')
+        params.body = JSON.stringify(body)
+
+    const response = await fetch(url, params);
+    const resultText = await response.text();
+    return resultText
+}
