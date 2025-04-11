@@ -1,7 +1,7 @@
-import numpy as np
-import pandas as pd
 import re
 import nltk
+import pandas as pd
+from sklearn.feature_extraction.text import CountVectorizer
 from string import punctuation
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
@@ -10,10 +10,9 @@ from nltk.tokenize import word_tokenize
 from nltk import pos_tag
 
 # Extend punctuation list
-
-
-def preprocess_text(text: str):
-    punctuation += '’‘“”–'
+punctuation += '’‘“”–'
+def preprocess_text(text: str) -> str:
+    
     """Apply multiple text processing steps in sequence."""
     # Remove punctuation
     for p in punctuation:
@@ -48,4 +47,3 @@ def preprocess_text(text: str):
     
     # Convert to lowercase
     return text.lower()
-

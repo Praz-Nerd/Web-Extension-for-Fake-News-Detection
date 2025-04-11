@@ -1,26 +1,46 @@
-// Listen for messages from the popup
+//listener for popup messages
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-    if (message.action === "getTime") {
-        const currentTime = new Date().toLocaleTimeString();
-        sendResponse({ time: currentTime });
-    }
-    if(message.action === "sendUrl"){
-        if (message.url){
-            //do the fetch to backend
-            //retreive response
-            fetch('http://127.0.0.1:5000/text', {
-                method: 'POST',
-                body: JSON.stringify({url:message.url}),
-                headers:{
-                    "Content-Type":'application/json'
+    (async () => {
+        switch (message.action) {
+            case "getTime": {
+                const currentTime = new Date().toLocaleTimeString();
+                sendResponse({ time: currentTime });
+                break;
+            }
+
+            case "sendUrl": {
+                if (message.url) {
+                    try {
+                        const response = await fetch('http://127.0.0.1:5000/text/url', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({ url: message.url })
+                        });
+
+                        const resultText = await response.text();
+                        sendResponse(resultText);
+                    } catch (error) {
+                        console.error("Fetch error:", error);
+                        sendResponse({ message: 'error' });
+                    }
+                } else {
+                    sendResponse({ message: 'error' });
                 }
-            }).then(async (response)=>{
-                sendResponse(await response.text())
-            })
+                break;
+            }
+
+            case "sendText": {
+                // Placeholder for future logic
+                sendResponse({ message: 'Not implemented yet' });
+                break;
+            }
+
+            default:
+                sendResponse({ message: 'Invalid action' });
         }
-        else{
-            sendResponse({message:'error'})
-        }
-    }
-    return true; // Required for async sendResponse
+    })();
+
+    return true; // Keeps the message channel open for async sendResponse
 });
