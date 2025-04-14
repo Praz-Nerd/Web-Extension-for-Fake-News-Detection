@@ -9,9 +9,14 @@ class TextClassifier:
         self.model = model
         self.vectorizer = vectorizer
 
-    def predict(self, text: str):
-        '''Vectorizes and does a prediction using the model on one single string. Note: the text needs to be prepared for ML applications'''
+    def predict(self, text: str, proba = True, cls = 1):
+        '''Vectorizes and does a prediction using the model on one single string. Returns probability for class 1 by default.
+        
+        Note: the text needs to be prepared for ML applications'''
         vector = pd.DataFrame(self.vectorizer.transform([text]).toarray(), columns=self.getVocabulary())
+        if proba:
+            return self.model.predict_proba(vector)[0][cls]
+        
         return self.model.predict(vector)[0]
     
     def getVocabulary(self):
@@ -20,7 +25,6 @@ class TextClassifier:
     
 
 models = {
-    'lgbm_tf_idf' : TextClassifier(joblib.load('backend/models/lgbm/model.pkl'),
+    'lgbm' : TextClassifier(joblib.load('backend/models/lgbm/model.pkl'),
                     joblib.load('backend/models/lgbm/tf_idf_vectorizer.pkl'))
 }
-
