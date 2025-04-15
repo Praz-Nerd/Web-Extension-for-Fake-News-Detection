@@ -15,10 +15,10 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
                         sendResponse(resultText);
                     } catch (error) {
                         console.error("Fetch error:", error);
-                        sendResponse({ message: 'error' });
+                        sendResponse({ message: 'server error' });
                     }
                 } else {
-                    sendResponse({ message: 'error' });
+                    sendResponse({ message: 'bad json' });
                 }
                 break;
             }
@@ -30,10 +30,10 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
                         sendResponse(resultText);
                     } catch (error) {
                         console.error("Fetch error:", error);
-                        sendResponse({ message: 'error' });
+                        sendResponse({ message: 'server error' });
                     }
                 } else {
-                    sendResponse({ message: 'error' });
+                    sendResponse({ message: 'bad json' });
                 }
                 break;
             }

@@ -1,25 +1,29 @@
-window.onload = ()=>{
+window.onload = () => {
     let filter = { active: true, currentWindow: true }
-    chrome.runtime.sendMessage({ action: "getTime" }, (response) => {
-        if (response) {
-            console.log('Extension started ' + String(response.time));
-        }
-    });
-
-
-
-    document.getElementById('btnStart').addEventListener('click', ()=>getTabUrl(filter))
-
-    function getTabUrl(filter){
-        chrome.tabs.query(filter).then((tabs)=>{
+    let textArea = document.getElementById('textArea')
+    
+    document.getElementById('btnCurrentTab').addEventListener('click', () => {
+        chrome.tabs.query(filter).then((tabs) => {
             let url = tabs[0].url
             console.log(url)
-            chrome.runtime.sendMessage({action: 'sendUrl', url:url}, (response) =>{
-                if(response){
+            chrome.runtime.sendMessage({ action: 'sendUrl', url: url }, (response) => {
+                if (response) {
                     console.log(response)
                 }
             })
         })
-    }
-    
+    })
+
+    document.getElementById('btnPastedText').addEventListener('click', ()=>{
+        let text = textArea.value
+        if(text.length > 0){
+            console.log(text)
+        }
+        else{
+            alert('text no good')
+        }
+        
+    })
+
+
 }

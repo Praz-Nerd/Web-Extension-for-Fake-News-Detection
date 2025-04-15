@@ -25,19 +25,26 @@ def hello_world():
 @app.post('/text/url')
 def extractTextFromUrl():
     '''get a dom and get the text from it, then preprocess'''
-    dom = requests.get(g.req['url']).text
-    crawler = WebCrawler(dom)
-    text = preprocess_text(crawler.extractText())
-    result = models[g.modelName].predict(text)
+    try:
+        dom = requests.get(g.req['url']).text
+        crawler = WebCrawler(dom)
+        text = preprocess_text(crawler.extractText())
+        result = models[g.modelName].predict(text)
+    except:
+        return{'status':'INVALID_URL', 'message':'Invalid url'}
     
-    return {'text':text, 'result':result}
+    return {'status':'REQ_SUCESS', 'text':text, 'result':result}
 
 @app.post('/text')
 def extractText():
     '''preprocess text that is already received'''
-    text = preprocess_text(g.req['text'])
-    result = models[g.modelName].predict(text)
-    return {'text':text, 'result':result}
+    try:
+        text = preprocess_text(g.req['text'])
+        result = models[g.modelName].predict(text)
+    except:
+        return{'status':'INVALID_TEXT', 'message':'Error parsing the given text'}
+    
+    return {'status':'REQ_SUCCESS', 'text':text, 'result':result}
 
 @app.after_request
 def afterRequest(response: Response):

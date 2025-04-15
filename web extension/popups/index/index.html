@@ -1,17 +1,65 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../bootstrap/css/bootstrap.min.css">
+    <script src="../bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="index.js" type="text/javascript"></script>
     <link rel="stylesheet" href="../style.css">
     <title>Document</title>
 </head>
+
 <body>
-    <h1 id="title">Fake News Detection</h1>
-    <textarea id="textArea" placeholder="Get current tab or paste text here..."></textarea>
-    <button id="btnStart">Analyze current tab</button>
-    <button id="textStart">Analyze pasted text</button>
-    <div id="status">Result may appear here...</div>
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <h1 class="display-3 text-center">Fake News Detection</h1>
+            </div>
+        </div>
+
+        <nav>
+            <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home"
+                    type="button" role="tab" aria-controls="nav-home" aria-selected="true">Get Text from Current Tab</button>
+
+                <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile"
+                    type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Paste Text</button>
+            </div>
+        </nav>
+
+        <div class="tab-content" id="nav-tabContent">
+            <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab"
+                tabindex="0">
+                <div class="col">
+                    <button type="button" class="btn btn-primary" id="btnCurrentTab">Analyze current tab</button>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab" tabindex="0">
+                <div class="row">
+                    <div class="col">
+                        <textarea id="textArea" placeholder="Get current tab or paste text here..."></textarea>
+                    </div>
+                </div>
+                <div class="row d-flex justify-content-evenly">
+                    <div class="col">
+                        <button type="button" class="btn btn-primary" id="btnPastedText">Analyze pasted text</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <div id="status">Result may appear here...</div>
+            </div>
+        </div>
+    </div>
+
 </body>
+
 </html>
