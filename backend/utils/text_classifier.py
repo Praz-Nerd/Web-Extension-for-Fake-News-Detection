@@ -17,7 +17,7 @@ class TextClassifier:
         if proba:
             return self.model.predict_proba(vector)[0][cls]
         
-        return self.model.predict(vector)[0]
+        return int(self.model.predict(vector)[0])
     
     def getVocabulary(self):
         '''Returns a list with the vocabulary stored in the vectorizer object'''
@@ -26,5 +26,7 @@ class TextClassifier:
 
 models = {
     'lgbm' : TextClassifier(joblib.load('backend/models/lgbm/model.pkl'),
-                    joblib.load('backend/models/lgbm/tf_idf_vectorizer.pkl'))
+                    joblib.load('backend/models/lgbm/tf_idf_vectorizer.pkl')),
+    'new lgbm' : TextClassifier(joblib.load('backend/models/new lgbm/model.pkl'),
+                    joblib.load('backend/models/new lgbm/vectorizer.pkl'))
 }

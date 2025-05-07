@@ -1,6 +1,7 @@
 body{
-    height: 400px;
-    width: 400px;
+    display: flex;
+    min-height: 400px;
+    min-width: 400px;
 }
 #status{
     border: 1px solid black;
@@ -13,4 +14,7 @@ textarea {
     box-sizing: border-box;
     resize: none;
     overflow: auto; /* Ensures scrollbars appear when needed */
+}
+button{
+    padding: 10px;
 }
