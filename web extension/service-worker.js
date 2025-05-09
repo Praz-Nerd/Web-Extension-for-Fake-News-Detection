@@ -59,6 +59,6 @@ async function getResponse(url, method, body) {
         params.body = JSON.stringify(body)
 
     const response = await fetch(url, params);
-    const resultText = await response.text();
+    let resultText = await response.json();
     return resultText
 }

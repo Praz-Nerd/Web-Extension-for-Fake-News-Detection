@@ -1,4 +1,4 @@
-from flask import Flask, request, make_response, g, Response
+from flask import Flask, request, g, Response
 from flask_cors import CORS
 from utils.web_crawler import WebCrawler
 from utils.preprocessing import *
@@ -29,6 +29,10 @@ def extractTextFromUrl():
         dom = requests.get(g.req['url']).text
         crawler = WebCrawler(dom)
         text = preprocess_text(crawler.extractText())
+
+        if len(text) == 0:
+            return{'status':'INVALID_TEXT', 'message':'No text extracted'}
+
         result = models[g.modelName].predict(text)
     except:
         return{'status':'INVALID_URL', 'message':'Invalid url'}
