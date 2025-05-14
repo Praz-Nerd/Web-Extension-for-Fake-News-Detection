@@ -3,10 +3,13 @@ from flask_cors import CORS
 from utils.web_crawler import WebCrawler
 from utils.preprocessing import *
 from utils.text_classifier import models
+from utils.db_connection import DBConnection
 import requests, json, time
 
 app = Flask(__name__)
 CORS(app)
+
+results = DBConnection.getDB('testDB')['fake news']
 
 @app.before_request
 def beforeRequest():
@@ -14,6 +17,7 @@ def beforeRequest():
     g.modelName = request.args.get('model', default='lgbm')
     g.req = request.get_json(silent=True)
     g.start = time.time()
+    g.saveToDB = False
 
 
 @app.post("/")
@@ -25,30 +29,45 @@ def hello_world():
 @app.post('/text/url')
 def extractTextFromUrl():
     '''get a dom and get the text from it, then preprocess'''
+    url = g.req['url']
+    #define the default response dictionary
+    res = {}
     try:
-        dom = requests.get(g.req['url']).text
-        crawler = WebCrawler(dom)
-        text = preprocess_text(crawler.extractText())
+        #query the database, if entry exists extract result, else analyze text and save to database
+        document = results.find_one({'url':url})
+        if document is not None:
+            res['result'] = document['result']
+        else:
+            dom = requests.get(url).text
+            crawler = WebCrawler(dom)
+            text = preprocess_text(crawler.extractText())
 
-        if len(text) == 0:
-            return{'status':'INVALID_TEXT', 'message':'No text extracted'}
+            if len(text) == 0:
+                return{'message':'No text extracted'}
 
-        result = models[g.modelName].predict(text)
+            #update response dictionary, and save to database
+            res['text'] = text
+            res['result'] = models[g.modelName].predict(text)
+            g.saveToDB = True
     except:
-        return{'status':'INVALID_URL', 'message':'Invalid url'}
+        return{'message':'Invalid url'}
     
-    return {'status':'REQ_SUCESS', 'text':text, 'result':result}
+    return res
 
 @app.post('/text')
 def extractText():
     '''preprocess text that is already received'''
     try:
         text = preprocess_text(g.req['text'])
+        
+        if len(text) == 0:
+                return{'message':'No text pasted...'}
+        
         result = models[g.modelName].predict(text)
     except:
-        return{'status':'INVALID_TEXT', 'message':'Error parsing the given text'}
+        return{'message':'Error parsing the given text'}
     
-    return {'status':'REQ_SUCCESS', 'text':text, 'result':result}
+    return {'text':text, 'result':result}
 
 @app.after_request
 def afterRequest(response: Response):
@@ -57,8 +76,15 @@ def afterRequest(response: Response):
         data = json.loads(response.get_data(as_text=True))
         data['model'] = g.modelName
         data["elapsedTime"] = time.time() - g.start
-        response.set_data(json.dumps(data))
+        
+        #insert to db
+        if g.saveToDB:
+            record = {'url':g.req['url']}
+            record.update(data)
+            record.pop('text')
+            results.insert_one(record)
 
+        response.set_data(json.dumps(data))
     return response
     
 

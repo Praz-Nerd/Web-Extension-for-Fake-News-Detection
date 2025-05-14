@@ -11,25 +11,69 @@ window.onload = () => {
         console.log(url)
 
         chrome.runtime.sendMessage({ action: 'sendUrl', url: url }, (response) => {
-            let bodyStyle = document.body.style
             //remove loading and get results
             document.getElementById('loadingSpinner').style.display = 'none'
-            document.getElementById('resultsContainer').style.display = 'block'
+            document.getElementById('resultBoxContainer').style.display = 'flex'
             //if response result, update popup with result information
-            if(response.result){
-                let result = parseFloat(response.result).toFixed(4)*100
-                if(result <= 30) bodyStyle.color = 'green'
-                else if(result > 30 && result <= 60) bodyStyle.color = 'yellow'
-                else bodyStyle.color = 'red'
+            
+            processResult(response)
 
-                resultBox.value = result.toString() + '% FAKE'
-                textArea.value = response.text
-            }
-            else{
-                resultBox.value = response.message
-            }
             console.log(response)
         })
     })
+
+    //button for handling pasted text
+    document.getElementById('pasteTextButton').addEventListener('click', () => {
+        text = document.getElementById('pasteTextArea').value
+        if (text.length == 0) {
+            resultBox.value = 'No text pasted...'
+        }
+        else {
+            //send text to backend
+            chrome.runtime.sendMessage({ action: 'sendText', text: text }, (response) => {
+                processResult(response)
+                console.log(response)
+            })
+        }
+    })
+
+
+
+
+    function initTextArea(label, text = '') {
+        document.getElementById('textAreaContainer').style.display = 'block'
+        document.getElementById('textAreaLabel').innerHTML = label
+        textArea.value = text
+    }
+
+    function updateBodyColor(value) {
+        let bodyStyle = document.body.style
+        if (value <= 30) bodyStyle.color = 'green'
+        else if (value > 30 && value <= 60) bodyStyle.color = 'orange'
+        else bodyStyle.color = 'red'
+    }
+
+    function processResult(response) {
+        if (response.result) {
+            let result = parseFloat(response.result).toFixed(4) * 100
+            updateBodyColor(result)
+
+            resultBox.value = result.toString() + '% FAKE'
+
+            if (response.text && response.text.length !== 0) {
+                initTextArea('Extracted text:', response.text)
+            }
+            else {
+                document.getElementById('databaseNotification').style.display = 'block'
+            }
+        }
+        else if (response.message === 'Invalid url') {
+            document.getElementById('pasteTextContainer').style.display = 'block'
+        }
+        else {
+            resultBox.value = response.message
+        }
+
+    }
 
 }

@@ -23,7 +23,7 @@
 
         <!--Form with results-->
         <form>
-            <div class="form-group row border rounded">
+            <div class="form-group-row d-flex">
                 <label for="urlBox" class="col-1 col-form-label">URL:</label>
                 <div class="col-11">
                     <input type="text" readonly class="form-control-plaintext" id="urlBox">
@@ -34,19 +34,34 @@
             <div class="d-flex justify-content-center">
                 <div class="spinner-border" role="status" id="loadingSpinner"></div>
             </div>
-            
+
             <!--Div with the results-->
-            <div id="resultsContainer" style="display: none;">
-                <div class="form-group row border rounded">
-                    <label for="resultBox" class="col-1 col-form-label">Result:</label>
-                    <div class="col-11">
+            <div class="form-group-row">
+                <div id="resultBoxContainer" style="display: none;">
+                    <label for="resultBox" class="col-2 col-form-label">Result:</label>
+                    <div class="col-10">
                         <input type="text" readonly class="form-control-plaintext text-center" id="resultBox">
                     </div>
                 </div>
-                <div class="form-group">
-                    <label for="textArea">Extracted text</label>
+                <small id="databaseNotification" class="form-text text-muted" style="display: none;">Result retreived
+                    from database</small>
+            </div>
+
+            <!--Div with pasting text and button-->
+            <div class="form-group">
+                <div id="pasteTextContainer" style="display: none;">
+                    <textarea class="form-control" id="pasteTextArea" placeholder="Paste text here..."></textarea>
+                    <button type="button" class="btn btn-primary mt-1" id="pasteTextButton">Analyze pasted text</button>
+                </div>
+            </div>
+
+            <!--Text are for showing the processed text-->
+            <div class="form-group">
+                <div id="textAreaContainer" style="display: none;">
+                    <label for="textArea" id="textAreaLabel"></label>
                     <textarea readonly class="form-control" id="textArea"></textarea>
                 </div>
+
             </div>
 
         </form>

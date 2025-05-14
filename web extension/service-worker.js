@@ -11,7 +11,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
             case "sendUrl": {
                 if (message.url) {
                     try {
-                        const resultText = await getResponse('http://127.0.0.1:5000/text/url', 'post', {url:message.url})
+                        const resultText = await getResponse('http://127.0.0.1:5000/text/url', 'post', { url: message.url })
                         sendResponse(resultText);
                     } catch (error) {
                         console.error("Fetch error:", error);
@@ -26,7 +26,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
             case "sendText": {
                 if (message.text) {
                     try {
-                        const resultText = await getResponse('http://127.0.0.1:5000/text', 'post', {text:message.text})
+                        const resultText = await getResponse('http://127.0.0.1:5000/text', 'post', { text: message.text })
                         sendResponse(resultText);
                     } catch (error) {
                         console.error("Fetch error:", error);
@@ -55,7 +55,7 @@ async function getResponse(url, method, body) {
         //body: JSON.stringify({ url: message.url })
     }
 
-    if(method.toLowerCase() === 'post')
+    if (method.toLowerCase() === 'post')
         params.body = JSON.stringify(body)
 
     const response = await fetch(url, params);
