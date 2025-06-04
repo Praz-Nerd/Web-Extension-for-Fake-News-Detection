@@ -8,19 +8,19 @@
     <script src="../bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="index.js" type="text/javascript"></script>
     <link rel="stylesheet" href="../style.css">
-    <title>Document</title>
 </head>
 
 <body>
 
-    <div class="container m-1">
+    <div class="container m-1 border">
         <!--Title-->
+        <hr style="width: 100%;">
         <div class="row">
             <div class="col">
-                <h1 class="display-3 text-center">Fake News Detection</h1>
+                <h1 class="display-5 text-center" id="title">Fake News Detection</h1>
             </div>
         </div>
-
+        <hr style="width: 100%;">
         <!--Form with results-->
         <form>
             <div class="form-group-row d-flex">
@@ -43,8 +43,8 @@
                         <input type="text" readonly class="form-control-plaintext text-center" id="resultBox">
                     </div>
                 </div>
-                <small id="databaseNotification" class="form-text text-muted" style="display: none;">Result retreived
-                    from database</small>
+                <small id="notification" class="form-text text-muted" style="display: none;"></small>
+                <hr style="width: 100%;">
             </div>
 
             <!--Div with pasting text and button-->

@@ -4,6 +4,7 @@ from utils.web_crawler import WebCrawler
 from utils.preprocessing import *
 from utils.text_classifier import models
 from utils.db_connection import DBConnection
+from datetime import datetime
 import requests, json, time
 
 app = Flask(__name__)
@@ -37,12 +38,14 @@ def extractTextFromUrl():
         document = results.find_one({'url':url})
         if document is not None:
             res['result'] = document['result']
+            res['model'] = document['model']
+            res['date'] = document['date']
         else:
             dom = requests.get(url).text
             crawler = WebCrawler(dom)
             text = preprocess_text(crawler.extractText())
 
-            if len(text) == 0:
+            if len(text) <= 200:
                 return{'message':'No text extracted'}
 
             #update response dictionary, and save to database
@@ -79,9 +82,11 @@ def afterRequest(response: Response):
         
         #insert to db
         if g.saveToDB:
-            record = {'url':g.req['url']}
-            record.update(data)
-            record.pop('text')
+            record = {'url':g.req['url'], 
+                      'model':g.modelName, 
+                      'result':data['result'],
+                      'date':datetime.now().strftime("%d-%B-%Y, %H:%M:%S")}
+            
             results.insert_one(record)
 
         response.set_data(json.dumps(data))
