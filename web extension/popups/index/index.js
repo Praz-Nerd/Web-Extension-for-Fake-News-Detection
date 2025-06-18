@@ -28,6 +28,8 @@ window.onload = () => {
             resultBox.value = 'No text pasted...'
         }
         else {
+            //hide button
+            document.getElementById('pasteTextButton').style.display = 'none'
             //send text to backend
             document.getElementById('loadingSpinner').style.display = 'block'
             document.getElementById('pasteTextContainer').style.display = 'none'
@@ -90,7 +92,7 @@ window.onload = () => {
             }
             else {
                 //addNotification('Result retreived from database')
-                addNotification('Database entry from ' + response['date'])
+                addNotification('Database entry from ' + response.date)
             }
         }
         else if (response.message === 'Invalid url' || response.message === 'No text extracted') {

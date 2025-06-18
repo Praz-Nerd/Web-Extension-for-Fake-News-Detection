@@ -1,21 +1,21 @@
 {
-    "name": "Fake News Detection",
-    "description": "Base Level Extension",
-    "version": "1.0",
-    "manifest_version": 3,
-    "action": {
-      "default_popup": "popups/index/index.html",
-      "default_icon": "images/icon_default.png"
-    },
-    "background": {
+  "name": "Fake News Detection",
+  "description": "Fake news detection extension, for my bachelor's thesis",
+  "version": "1.0",
+  "manifest_version": 3,
+  "action": {
+    "default_popup": "popups/index/index.html",
+    "default_icon": "images/icon_default.png"
+  },
+  "background": {
     "service_worker": "service-worker.js"
-    },
-    "host_permissions": [
-      "https://*/",
-      "http://*/"
+  },
+  "host_permissions": [
+    "https://*/",
+    "http://*/"
   ],
   "permissions": [
-      "scripting",
-      "activeTab"
+    "scripting",
+    "activeTab"
   ]
-  }
+}

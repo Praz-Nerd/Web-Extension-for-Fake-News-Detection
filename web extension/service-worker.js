@@ -1,45 +1,47 @@
 //listener for popup messages
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     (async () => {
-        switch (message.action) {
-            case "getTime": {
-                const currentTime = new Date().toLocaleTimeString();
-                sendResponse({ time: currentTime });
-                break;
-            }
+        try {
+            switch (message.action) {
+                case "getTime": {
+                    const currentTime = new Date().toLocaleTimeString();
+                    sendResponse({ time: currentTime });
+                    break;
+                }
 
-            case "sendUrl": {
-                if (message.url) {
-                    try {
+                case "sendUrl": {
+                    if (message.url) {
+
                         const resultText = await getResponse('http://127.0.0.1:5000/text/url', 'post', { url: message.url })
                         sendResponse(resultText);
-                    } catch (error) {
-                        console.error("Fetch error:", error);
-                        sendResponse({ message: 'server error' });
-                    }
-                } else {
-                    sendResponse({ message: 'bad json' });
-                }
-                break;
-            }
 
-            case "sendText": {
-                if (message.text) {
-                    try {
+
+
+                    } else {
+                        sendResponse({ message: 'bad json' });
+                    }
+                    break;
+                }
+
+                case "sendText": {
+                    if (message.text) {
+
                         const resultText = await getResponse('http://127.0.0.1:5000/text', 'post', { text: message.text })
                         sendResponse(resultText);
-                    } catch (error) {
-                        console.error("Fetch error:", error);
-                        sendResponse({ message: 'server error' });
-                    }
-                } else {
-                    sendResponse({ message: 'bad json' });
-                }
-                break;
-            }
 
-            default:
-                sendResponse({ message: 'Invalid action' });
+                    } else {
+                        sendResponse({ message: 'bad json' });
+                    }
+                    break;
+                }
+
+                default:
+                    sendResponse({ message: 'Invalid action' });
+            }
+        }
+
+        catch (error) {
+            sendResponse({ message: 'server error' });
         }
     })();
 
